@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">MeetX</string>
+    <string name="this_is_the_new_app">This is the new App!</string>
 </resources>
