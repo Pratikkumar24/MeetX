@@ -6,4 +6,74 @@
     android:layout_height="match_parent"
     tools:context=".Signup_page">
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageView
+            android:id="@+id/imageView"
+            android:layout_width="150dp"
+            android:layout_height="150dp"
+
+            app:srcCompat="@drawable/logo" />
+
+        <EditText
+            android:id="@+id/firstName"
+            android:layout_width="300dp"
+            android:layout_height="50dp"
+            android:layout_marginBottom="15dp"
+            android:layout_marginTop="50dp"
+            android:autofillHints=""
+            android:ems="10"
+            android:hint="@string/firstName"
+            android:inputType="text" />
+
+        <EditText
+            android:id="@+id/lastName"
+            android:layout_width="300dp"
+            android:layout_height="50dp"
+            android:layout_marginBottom="15dp"
+
+            android:ems="10"
+            android:hint="@string/lastName"
+            android:inputType="text"
+            android:autofillHints="" />
+
+        <EditText
+            android:id="@+id/email"
+            android:layout_width="300dp"
+            android:layout_marginBottom="15dp"
+
+            android:layout_height="50dp"
+            android:ems="10"
+            android:hint="@string/email"
+            android:inputType="textEmailAddress"
+            tools:ignore="TextFields"
+            android:autofillHints="" />
+
+        <EditText
+            android:id="@+id/password"
+            android:layout_width="300dp"
+            android:layout_height="50dp"
+            android:layout_marginBottom="25dp"
+
+            android:autofillHints=""
+            android:ems="10"
+            android:hint="@string/password"
+            android:inputType="textPassword"
+             />
+
+        <Button
+            android:id="@+id/signup"
+            android:layout_width="200dp"
+            android:layout_height="60dp"
+            android:text="@string/Signup"
+            android:textSize="16sp" />
+    </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
