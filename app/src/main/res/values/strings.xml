@@ -6,8 +6,14 @@
     <string name="Next">Next</string>
     <string name="Login">Login</string>
     <string name="Signup">Signup</string>
-    <string name="firstName">First Name</string>
     <string name="lastName">Last Name</string>
+    <string name="login_name">Sign in</string>
+    <string name="register_name">Sign up</string>
+    <string name="wlc_sign_in">Welcome back, sign in</string>
+    <string name="wlc_sign_up">Sign up to continue</string>
     <string name="email">Email</string>
     <string name="password">Password</string>
+    <string name="already_member">Already have an account, Sign in</string>
+    <string name="dont_have">Don\'t have an account, Sign up</string>
+    <string name="username">Username</string>
 </resources>

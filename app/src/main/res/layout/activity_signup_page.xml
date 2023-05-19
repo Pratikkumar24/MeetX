@@ -4,13 +4,14 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Signup_page">
+    tools:context=".authentication.Signup_page">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:gravity="center"
         android:orientation="vertical"
+        android:paddingBottom="50dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -20,60 +21,103 @@
             android:id="@+id/imageView"
             android:layout_width="150dp"
             android:layout_height="150dp"
+            android:layout_marginBottom="50dp"
+            app:srcCompat="@drawable/sign_up" />
 
-            app:srcCompat="@drawable/logo" />
-
-        <EditText
-            android:id="@+id/firstName"
+        <LinearLayout
             android:layout_width="300dp"
             android:layout_height="50dp"
-            android:layout_marginBottom="15dp"
-            android:layout_marginTop="50dp"
-            android:autofillHints=""
-            android:ems="10"
-            android:hint="@string/firstName"
-            android:inputType="text" />
+            android:layout_margin="20dp"
+            android:orientation="horizontal">
 
-        <EditText
-            android:id="@+id/lastName"
+
+            <ImageView
+                android:id="@+id/usernameIcon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_weight="1"
+                android:src="@drawable/baseline_person_24" />
+
+            <EditText
+                android:id="@+id/username"
+                android:layout_width="250dp"
+                android:layout_height="50dp"
+                android:autofillHints=""
+                android:ems="10"
+                android:hint="@string/username"
+                android:inputType=""
+                tools:ignore="TextFields" />
+        </LinearLayout>
+
+        <LinearLayout
             android:layout_width="300dp"
             android:layout_height="50dp"
-            android:layout_marginBottom="15dp"
+            android:layout_margin="20dp"
+            android:orientation="horizontal">
 
-            android:ems="10"
-            android:hint="@string/lastName"
-            android:inputType="text"
-            android:autofillHints="" />
+            <ImageView
+                android:id="@+id/emailIcon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
 
-        <EditText
-            android:id="@+id/email"
+                android:layout_weight="1"
+                android:src="@drawable/baseline_email_24" />
+
+            <EditText
+                android:id="@+id/email"
+                android:layout_width="250dp"
+                android:layout_height="50dp"
+
+                android:layout_marginBottom="15dp"
+                android:autofillHints=""
+                android:ems="10"
+                android:hint="@string/email"
+                android:inputType="textEmailAddress"
+                tools:ignore="TextFields" />
+        </LinearLayout>
+
+        <LinearLayout
             android:layout_width="300dp"
-            android:layout_marginBottom="15dp"
-
             android:layout_height="50dp"
-            android:ems="10"
-            android:hint="@string/email"
-            android:inputType="textEmailAddress"
-            tools:ignore="TextFields"
-            android:autofillHints="" />
+            android:layout_margin="20dp"
+            android:orientation="horizontal">
 
-        <EditText
-            android:id="@+id/password"
-            android:layout_width="300dp"
-            android:layout_height="50dp"
-            android:layout_marginBottom="25dp"
+            <ImageView
+                android:id="@+id/passwordIcon"
+                android:layout_width="50dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
 
-            android:autofillHints=""
-            android:ems="10"
-            android:hint="@string/password"
-            android:inputType="textPassword"
-             />
+                android:layout_weight="1"
+                android:src="@drawable/baseline_lock_24" />
+
+            <EditText
+                android:id="@+id/password"
+                android:layout_width="220dp"
+                android:layout_height="50dp"
+                android:layout_marginBottom="25dp"
+                android:autofillHints=""
+                android:ems="10"
+                android:hint="@string/password"
+                android:inputType="textPassword" />
+
+            <ImageView
+                android:id="@+id/hideBtn"
+                android:layout_width="30dp"
+                android:layout_height="25dp"
+                android:layout_gravity="center"
+                android:layout_weight="1"
+                app:srcCompat="@drawable/hide_eye" />
+        </LinearLayout>
 
         <Button
             android:id="@+id/signup"
             android:layout_width="200dp"
             android:layout_height="60dp"
             android:text="@string/Signup"
+            android:layout_marginTop="20dp"
             android:textSize="16sp" />
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

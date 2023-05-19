@@ -13,13 +13,13 @@
         android:theme="@style/Theme.MeetX"
         tools:targetApi="31">
         <activity
-            android:name=".Signup_page"
+            android:name=".authentication.Signup_page"
             android:exported="false" />
         <activity
-            android:name=".Login_page"
+            android:name=".authentication.Login_page"
             android:exported="false" />
         <activity
-            android:name=".Authentication"
+            android:name=".authentication.Authentication"
             android:exported="false" />
         <activity
             android:name=".MainActivity"

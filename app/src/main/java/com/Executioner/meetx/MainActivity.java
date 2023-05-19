@@ -2,14 +2,13 @@ package com.Executioner.meetx;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.annotation.SuppressLint;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
+
+import com.Executioner.meetx.authentication.Authentication;
 
 public class MainActivity extends AppCompatActivity {
 ImageView next;
@@ -23,7 +22,7 @@ ImageView next;
             @Override
             public void onClick(View v) {
                 test();
-                Intent intent=new Intent(getApplicationContext(),Authentication.class);
+                Intent intent=new Intent(getApplicationContext(), Authentication.class);
                 startActivity(intent);
             }
         });

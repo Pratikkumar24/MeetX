@@ -2,4 +2,10 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="primaryColor">@color/darkIndigo</color>
+    <color name="buttonColor">#800000</color>
+    <color name="diamondDust">#f8f5e6</color>
+    <color name="gray">#999</color>
+    <color name="darkIndigo">#171d4b</color>
+    <color name="gooseBerry">#afe19f</color>
 </resources>
