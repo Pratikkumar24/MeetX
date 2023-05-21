@@ -23,24 +23,7 @@ public class helper {
                     "(?=\\S+$)" +           //no white spaces
                     ".{4,}" +               //at least 4 characters
                     "$");
-    public static boolean isEmail(EditText email) {
-        String Email = email.getText().toString();
-        return (!TextUtils.isEmpty(Email) && Patterns.EMAIL_ADDRESS.matcher(Email).matches());
-    }
 
-    public static boolean isValidPassword(final String password) {
-
-        Pattern pattern;
-        Matcher matcher;
-
-        final String PASSWORD_PATTERN = "(/^(?=.*\\d)(?=.*[A-Z])([@$%&#])[0-9a-zA-Z]{4,}$/)";
-
-        pattern = Pattern.compile(PASSWORD_PATTERN);
-        matcher = pattern.matcher(password);
-
-        return matcher.matches();
-
-    }
 
     public static boolean validateEmail(EditText email) {
         String emailInput = email.getText().toString();
@@ -63,7 +46,7 @@ public class helper {
         if (usernameInput.isEmpty()) {
             username.setError("Field can't be empty");
             return false;
-        } else if (usernameInput.length() > 15) {
+        } else if (usernameInput.length() > Constants.USERNAME_MAX_LENGTH) {
             username.setError("Username too long");
             return false;
         } else {

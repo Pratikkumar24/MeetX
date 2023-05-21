@@ -19,6 +19,7 @@ import android.text.method.PasswordTransformationMethod;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 //import com.Executioner.meetx.authentication.helper;
+import com.Executioner.meetx.Homepage.homepage;
 import com.Executioner.meetx.R;
 
 import java.util.regex.Pattern;
@@ -50,8 +51,8 @@ String TAG = "pratik";
                     String UserName = username.getText().toString();
                     String Password = password.getText().toString();
                     String Email = email.getText().toString();
-
-                    Log.i(TAG," UserName: "+ UserName +" Password:" + Password + " Email:"+ Email);
+                    Intent intent=new Intent(getApplicationContext(), homepage.class);
+                    startActivity(intent);
                 }
             }
         });
