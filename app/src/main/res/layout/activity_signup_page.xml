@@ -115,11 +115,36 @@
         </LinearLayout>
 
         <Button
-            android:id="@+id/signup"
+            android:id="@+id/signup_btn"
             android:layout_width="200dp"
             android:layout_height="60dp"
             android:layout_marginTop="20dp"
             android:text="@string/Signup"
             android:textSize="16sp" />
+
+        <LinearLayout
+            android:id="@+id/alreadyMemberLogin"
+
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="20dp"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="130dp"
+                android:layout_height="30dp"
+                android:text="@string/already_a_member"
+                tools:ignore="HardcodedText" />
+
+            <TextView
+                android:id="@+id/signupLogin"
+
+                android:layout_width="40dp"
+                android:layout_height="30dp"
+                android:text="@string/log_in"
+                android:textStyle="bold" />
+        </LinearLayout>
+
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
