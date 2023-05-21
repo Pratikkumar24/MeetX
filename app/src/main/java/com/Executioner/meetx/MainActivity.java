@@ -21,7 +21,6 @@ ImageView next;
         next.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                test();
                 Intent intent=new Intent(getApplicationContext(), Authentication.class);
                 startActivity(intent);
             }
