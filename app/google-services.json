@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "804816567340",
+    "project_id": "login-register-authentic-d04f0",
+    "storage_bucket": "login-register-authentic-d04f0.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:804816567340:android:cdddd13a048f63f5f46589",
+        "android_client_info": {
+          "package_name": "com.Executioner.meetx"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "804816567340-h0g1ocenj04jj348g0vn9voqt1cafnq6.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDr7P5M-GeUqbCQgyu2adVlsB935EU_1xI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "804816567340-h0g1ocenj04jj348g0vn9voqt1cafnq6.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

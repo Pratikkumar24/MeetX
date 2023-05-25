@@ -24,6 +24,7 @@ Button signup_btn;
             public void onClick(View v) {
                 Intent intent=new Intent(getApplicationContext(), Login_page.class);
                 startActivity(intent);
+                finish();
             }
         });
 
@@ -33,6 +34,7 @@ Button signup_btn;
             public void onClick(View view) {
                 Intent intent = new Intent(getApplicationContext(), Signup_page.class);
                 startActivity(intent);
+                finish();
             }
         });
     }
