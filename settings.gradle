@@ -11,6 +11,6 @@ dependencyResolutionManagement {
         google()
         mavenCentral()
     }
-}
+}             
 rootProject.name = "MeetX"
 include ':app'
