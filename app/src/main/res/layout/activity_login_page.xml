@@ -32,19 +32,19 @@
 
             <ImageView
                 android:id="@+id/username_icon"
-                android:layout_width="50dp"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_weight="1"
-                android:src="@drawable/baseline_person_24" />
+                android:src="@drawable/baseline_email_24" />
 
             <EditText
-                android:id="@+id/login_username"
+                android:id="@+id/login_email"
                 android:layout_width="250dp"
                 android:layout_height="50dp"
                 android:autofillHints=""
                 android:ems="10"
-                android:hint="@string/username"
+                android:hint="@string/email"
                 android:inputType="text" />
 
         </LinearLayout>

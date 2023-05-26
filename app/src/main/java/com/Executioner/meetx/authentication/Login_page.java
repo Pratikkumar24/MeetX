@@ -2,6 +2,7 @@ package com.Executioner.meetx.authentication;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.method.HideReturnsTransformationMethod;
@@ -19,15 +20,16 @@ import com.Executioner.meetx.R;
 public class Login_page extends AppCompatActivity {
     String TAG="NEHA";
 Button login;
-EditText username,password;
+EditText email,password;
 ImageView hideBtn;
 LinearLayout accountSignUp;
+    @SuppressLint("MissingInflatedId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login_page);
         accountSignUp=findViewById(R.id.accountSignUp);
-        username=findViewById(R.id.login_username);
+        email=findViewById(R.id.login_email);
         password=findViewById(R.id.login_password);
         hideBtn=findViewById(R.id.eye_icon);
         login=findViewById(R.id.login_btn);
@@ -36,7 +38,7 @@ LinearLayout accountSignUp;
             @Override
             public void onClick(View v) {
                 if(confirmInput()){
-                    String UserName = username.getText().toString();
+                    String UserName = email.getText().toString();
                     String Password = password.getText().toString();
                     Log.i(TAG," UserName: "+ UserName +" Password:" + Password);
                     Intent intent=new Intent(getApplicationContext(), homepage.class);
@@ -71,7 +73,7 @@ LinearLayout accountSignUp;
         });
     }
     public boolean confirmInput() {
-        if (!helper.validateUsername(username) | !helper.validatePassword(password)) {
+        if (!helper.validateEmail(email) | !helper.validatePassword(password)) {
             return false;
         }
         return true;
