@@ -53,6 +53,7 @@ String TAG = "pratik";
                     String Email = email.getText().toString();
                     Intent intent=new Intent(getApplicationContext(), homepage.class);
                     startActivity(intent);
+                    finish();
                 }
             }
         });
@@ -77,6 +78,7 @@ String TAG = "pratik";
             public void onClick(View view) {
                 Intent intent=new Intent(getApplicationContext(), Login_page.class);
                 startActivity(intent);
+                finish();
             }
         });
     }

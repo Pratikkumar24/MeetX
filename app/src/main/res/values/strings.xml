@@ -21,4 +21,5 @@
     <string name="remember_me">Remember me</string>
     <string name="forgot_password">Forgot password?</string>
     <string name="need_an_account">Need an account?</string>
+    <string name="app_logo">app logo</string>
 </resources>

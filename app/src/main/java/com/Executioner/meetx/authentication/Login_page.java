@@ -41,6 +41,7 @@ LinearLayout accountSignUp;
                     Log.i(TAG," UserName: "+ UserName +" Password:" + Password);
                     Intent intent=new Intent(getApplicationContext(), homepage.class);
                     startActivity(intent);
+                    finish();
                 }
             }
         });
@@ -49,6 +50,7 @@ LinearLayout accountSignUp;
             public void onClick(View v) {
                 Intent intent=new Intent(getApplicationContext(), Signup_page.class);
                 startActivity(intent);
+                finish();
             }
         });
         hideBtn.setOnClickListener(new View.OnClickListener() {
