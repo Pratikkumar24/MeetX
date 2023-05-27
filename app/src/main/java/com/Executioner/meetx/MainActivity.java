@@ -20,7 +20,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
 public class MainActivity extends AppCompatActivity {
-    String TAG="mainPratik";
+    String TAG="mainActivity";
     Button login_btn;
     Button signup_btn;
     FirebaseAuth auth;

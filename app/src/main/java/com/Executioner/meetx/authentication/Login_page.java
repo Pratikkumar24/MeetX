@@ -58,14 +58,11 @@ LinearLayout accountSignUp;
                         public void onComplete(@NonNull Task<AuthResult> task) {
                             if(task.isSuccessful())
                             {
-                                try {
-                                    Intent intent = new Intent(getApplicationContext(), homepage.class);
-                                    startActivity(intent);
-                                    finish();
-                                }catch(Exception e)
-                                {
-                                    Toast.makeText(Login_page.this, e.getMessage(), Toast.LENGTH_SHORT).show();
-                                }
+
+                                Intent intent = new Intent(getApplicationContext(), homepage.class);
+                                startActivity(intent);
+                                finish();
+
                             }
                             else {
                                 Toast.makeText(Login_page.this, Objects.requireNonNull(task.getException()).getMessage() , Toast.LENGTH_SHORT).show();
