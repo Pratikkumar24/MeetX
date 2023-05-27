@@ -1,33 +1,34 @@
 {
   "project_info": {
-    "project_number": "804816567340",
-    "project_id": "login-register-authentic-d04f0",
-    "storage_bucket": "login-register-authentic-d04f0.appspot.com"
+    "project_number": "644962146533",
+    "firebase_url": "https://meetx-2557e-default-rtdb.firebaseio.com",
+    "project_id": "meetx-2557e",
+    "storage_bucket": "meetx-2557e.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:804816567340:android:cdddd13a048f63f5f46589",
+        "mobilesdk_app_id": "1:644962146533:android:b5743d7c5905c6c6651c0c",
         "android_client_info": {
           "package_name": "com.Executioner.meetx"
         }
       },
       "oauth_client": [
         {
-          "client_id": "804816567340-h0g1ocenj04jj348g0vn9voqt1cafnq6.apps.googleusercontent.com",
+          "client_id": "644962146533-9itt1bmthaq2hlubgbrhausi3ctnrigc.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyDr7P5M-GeUqbCQgyu2adVlsB935EU_1xI"
+          "current_key": "AIzaSyBxcvGo3DZkB8PDGSicCYg8OfVxzVZc-Tw"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "804816567340-h0g1ocenj04jj348g0vn9voqt1cafnq6.apps.googleusercontent.com",
+              "client_id": "644962146533-9itt1bmthaq2hlubgbrhausi3ctnrigc.apps.googleusercontent.com",
               "client_type": 3
             }
           ]
