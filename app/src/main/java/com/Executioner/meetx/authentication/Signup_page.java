@@ -40,13 +40,12 @@ ImageView hide;
 LinearLayout alreadyMember;
 FirebaseAuth auth;
 FirebaseDatabase database;
-String TAG = "pratik";
+String TAG = "signup_page";
     @SuppressLint("MissingInflatedId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_signup_page);
-        Log.i(TAG,"Reached signup page");
         final boolean[] visibility = {false};
         auth = FirebaseAuth.getInstance();
         database = FirebaseDatabase.getInstance();

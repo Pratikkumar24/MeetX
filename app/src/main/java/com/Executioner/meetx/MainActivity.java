@@ -1,5 +1,6 @@
 package com.Executioner.meetx;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.annotation.SuppressLint;
@@ -9,18 +10,30 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
+import com.Executioner.meetx.Homepage.homepage;
 import com.Executioner.meetx.authentication.Login_page;
 import com.Executioner.meetx.authentication.Signup_page;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.analytics.FirebaseAnalytics;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 public class MainActivity extends AppCompatActivity {
-    String TAG="pratiksha";
+    String TAG="mainActivity";
     Button login_btn;
     Button signup_btn;
+    FirebaseAuth auth;
+
     @SuppressLint("MissingInflatedId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        auth = FirebaseAuth.getInstance();
+
+        //todo - redirect to the homepage if a user is already logged in
+
         login_btn=findViewById(R.id.Login_page);
         login_btn.setOnClickListener(new View.OnClickListener() {
             @Override

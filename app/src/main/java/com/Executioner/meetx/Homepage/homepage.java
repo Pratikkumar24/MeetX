@@ -12,5 +12,9 @@ public class homepage extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_homepage);
+        //todo - Button to logout
+        //todo - button to signout
+
+        //todo - Integrating Log out and Sign out into SIDEBAR
     }
 }
