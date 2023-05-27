@@ -1,5 +1,6 @@
 package com.Executioner.meetx.authentication;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.annotation.SuppressLint;
@@ -21,7 +22,14 @@ import android.widget.Toast;
 //import com.Executioner.meetx.authentication.helper;
 import com.Executioner.meetx.Homepage.homepage;
 import com.Executioner.meetx.R;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
+import java.util.Objects;
 import java.util.regex.Pattern;
 
 public class Signup_page extends AppCompatActivity {
@@ -30,13 +38,18 @@ EditText username, password, email;
 Button signUp;
 ImageView hide;
 LinearLayout alreadyMember;
+FirebaseAuth auth;
+FirebaseDatabase database;
 String TAG = "pratik";
     @SuppressLint("MissingInflatedId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_signup_page);
+        Log.i(TAG,"Reached signup page");
         final boolean[] visibility = {false};
+        auth = FirebaseAuth.getInstance();
+        database = FirebaseDatabase.getInstance();
         alreadyMember = findViewById(R.id.alreadyMemberLogin);
         hide = findViewById(R.id.hideBtn);
         username = findViewById(R.id.username);
@@ -51,9 +64,38 @@ String TAG = "pratik";
                     String UserName = username.getText().toString();
                     String Password = password.getText().toString();
                     String Email = email.getText().toString();
-                    Intent intent=new Intent(getApplicationContext(), homepage.class);
-                    startActivity(intent);
-                    finish();
+                    Log.i(TAG,username+"$"+password+"$"+email);
+                    //putting into database
+                    auth.createUserWithEmailAndPassword(Email,Password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                        @Override
+                        public void onComplete(@NonNull Task<AuthResult> task) {
+                            if(task.isSuccessful()){
+                                String id= Objects.requireNonNull(task.getResult().getUser()).getUid();
+                                DatabaseReference reference = database.getReference().child("users").child(id);
+                                Users user=new Users();
+                                user.setUsername(UserName);
+                                user.setPassword(Password);
+                                user.setEmail(Email);
+                                reference.setValue(user).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<Void> task) {
+                                        if(task.isSuccessful()){
+                                            Intent intent=new Intent(getApplicationContext(), homepage.class);
+                                            startActivity(intent);
+                                            finish();
+                                        }else{
+                                            Log.i(TAG,"Error in creating account");
+                                            Toast.makeText(getApplicationContext(),"Error in creating account",Toast.LENGTH_SHORT).show();
+                                        }
+                                    }
+                                });
+                            }
+                            else{
+                                Log.i(TAG,"Exception in creating user");
+                                Toast.makeText(getApplicationContext(), Objects.requireNonNull(task.getException()).getMessage(),Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    });
                 }
             }
         });
