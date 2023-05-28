@@ -32,6 +32,7 @@ public class helper {
             email.setError("Field can't be empty");
             return false;
         } else if (!Patterns.EMAIL_ADDRESS.matcher(emailInput).matches()) {
+            //todo - EmailAddress need to be checked for pattern
             email.setError("Please enter a valid email address");
             return false;
         } else {

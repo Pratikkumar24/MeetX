@@ -31,6 +31,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         auth = FirebaseAuth.getInstance();
+        getSupportActionBar().hide();
 
         //todo - redirect to the homepage if a user is already logged in
 

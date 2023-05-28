@@ -26,46 +26,49 @@ import com.google.firebase.auth.FirebaseAuth;
 import java.util.Objects;
 
 public class Login_page extends AppCompatActivity {
-    String TAG="login_page";
-Button login;
-EditText email,password;
-ImageView hideBtn;
-FirebaseAuth auth;
+    String TAG = "login_page";
+    Button login;
+    EditText email, password;
+    ImageView hideBtn;
+    FirebaseAuth auth;
 
-LinearLayout accountSignUp;
+    LinearLayout accountSignUp;
+
     @SuppressLint("MissingInflatedId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login_page);
-        accountSignUp=findViewById(R.id.accountSignUp);
-        email=findViewById(R.id.login_email);
-        password=findViewById(R.id.login_password);
-        hideBtn=findViewById(R.id.eye_icon);
-        login=findViewById(R.id.login_btn);
+        getSupportActionBar().hide();
+
+        accountSignUp = findViewById(R.id.accountSignUp);
+        email = findViewById(R.id.login_email);
+        password = findViewById(R.id.login_password);
+        hideBtn = findViewById(R.id.eye_icon);
+        login = findViewById(R.id.login_btn);
         final boolean[] visibility = {false};
 
 
         auth = FirebaseAuth.getInstance();
         login.setOnClickListener(new View.OnClickListener() {
             @Override
+
+
             public void onClick(View v) {
-                if(confirmInput()){
+                if (confirmInput()) {
                     String Email = email.getText().toString();
                     String Password = password.getText().toString();
                     auth.signInWithEmailAndPassword(Email, Password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                         @Override
                         public void onComplete(@NonNull Task<AuthResult> task) {
-                            if(task.isSuccessful())
-                            {
+                            if (task.isSuccessful()) {
 
                                 Intent intent = new Intent(getApplicationContext(), homepage.class);
                                 startActivity(intent);
                                 finish();
 
-                            }
-                            else {
-                                Toast.makeText(Login_page.this, Objects.requireNonNull(task.getException()).getMessage() , Toast.LENGTH_SHORT).show();
+                            } else {
+                                Toast.makeText(Login_page.this, Objects.requireNonNull(task.getException()).getMessage(), Toast.LENGTH_SHORT).show();
                             }
                         }
                     });
@@ -75,7 +78,7 @@ LinearLayout accountSignUp;
         accountSignUp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent=new Intent(getApplicationContext(), Signup_page.class);
+                Intent intent = new Intent(getApplicationContext(), Signup_page.class);
                 startActivity(intent);
                 finish();
             }
@@ -84,12 +87,10 @@ LinearLayout accountSignUp;
             @Override
             public void onClick(View view) {
 
-                if(!visibility[0])
-                {
+                if (!visibility[0]) {
                     hideBtn.setImageResource(R.drawable.unhideeye);
                     password.setTransformationMethod(HideReturnsTransformationMethod.getInstance());
-                }
-                else {
+                } else {
                     hideBtn.setImageResource(R.drawable.hide_eye);
                     password.setTransformationMethod(PasswordTransformationMethod.getInstance());
                 }
@@ -97,6 +98,7 @@ LinearLayout accountSignUp;
             }
         });
     }
+
     public boolean confirmInput() {
         if (!helper.validateEmail(email) | !helper.validatePassword(password)) {
             return false;
