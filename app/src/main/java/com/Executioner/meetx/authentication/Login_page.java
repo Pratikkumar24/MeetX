@@ -5,12 +5,14 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.method.HideReturnsTransformationMethod;
 import android.text.method.PasswordTransformationMethod;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -31,8 +33,10 @@ public class Login_page extends AppCompatActivity {
     EditText email, password;
     ImageView hideBtn;
     FirebaseAuth auth;
+    CheckBox remember_box;
 
     LinearLayout accountSignUp;
+    SharedPreferences sharedPreferences;
 
     @SuppressLint("MissingInflatedId")
     @Override
@@ -46,18 +50,41 @@ public class Login_page extends AppCompatActivity {
         password = findViewById(R.id.login_password);
         hideBtn = findViewById(R.id.eye_icon);
         login = findViewById(R.id.login_btn);
+        remember_box = findViewById(R.id.remember_box);
         final boolean[] visibility = {false};
 
 
         auth = FirebaseAuth.getInstance();
+        //storing data of the sharedpreference file into sharedpreference object
+        sharedPreferences = getSharedPreferences(Constants.PREFERENCE, MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        String remember_password=sharedPreferences.getString(Constants.PASSWORD,Constants.NULL);
+        String remember_email=sharedPreferences.getString(Constants.EMAIL,Constants.NULL);
+        if(remember_password.equals(Constants.NULL) && remember_email.equals(Constants.NULL)){
+            remember_box.setChecked(false);
+        }else{
+            remember_box.setChecked(true);
+            email.setText(remember_email);
+            password.setText(remember_password);
+        }
         login.setOnClickListener(new View.OnClickListener() {
             @Override
-
-
             public void onClick(View v) {
                 if (confirmInput()) {
                     String Email = email.getText().toString();
                     String Password = password.getText().toString();
+                    if (remember_box.isChecked()) {
+                        editor.putString(Constants.EMAIL, Email);
+                        editor.putString(Constants.PASSWORD, Password);
+                        editor.apply();
+                    }else if(sharedPreferences.contains(Constants.EMAIL) && sharedPreferences.contains(Constants.PASSWORD)) {
+                            editor.remove(Constants.EMAIL);
+                            editor.remove(Constants.PASSWORD);
+                            editor.apply();
+                    }
+                    Intent intent = new Intent(getApplicationContext(), homepage.class);
+                    startActivity(intent);
+                    finish();
                     auth.signInWithEmailAndPassword(Email, Password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                         @Override
                         public void onComplete(@NonNull Task<AuthResult> task) {
@@ -106,3 +133,4 @@ public class Login_page extends AppCompatActivity {
         return true;
     }
 }
+

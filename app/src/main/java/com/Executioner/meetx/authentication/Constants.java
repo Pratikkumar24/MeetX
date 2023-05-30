@@ -9,4 +9,7 @@ public class Constants {
     public static final String DEFAULT_USERNAME="meetx";
     public static final String DEFAULT_PASSWORD="Abc@16";
     public static final String DEFAULT_EMAIL="abc@gmail.com";
+    public static final String EMAIL="email";
+    public static final String PASSWORD="password";
+    public static final String NULL="null";
 }
