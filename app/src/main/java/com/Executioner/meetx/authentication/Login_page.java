@@ -39,6 +39,7 @@ import java.util.Objects;
 public class Login_page extends AppCompatActivity {
     String TAG = "login_page";
     Button login, getOTP;
+    ImageView Verification;
     EditText email, password;
     ImageView hideBtn;
     FirebaseAuth auth;
@@ -79,10 +80,12 @@ public class Login_page extends AppCompatActivity {
             close.setOnClickListener(v -> alertDialog.dismiss());
             getOTP = mView.findViewById(R.id.send_otp);
             otpEmail = mView.findViewById(R.id.OTP_email);
+            Verification=mView.findViewById(R.id.verification);
             getOTP.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     if (helper.validateEmail(otpEmail)) {
+                        String OtpEmail=otpEmail.getText().toString();
                         DatabaseReference refs = mDatabase.child(Constants.USERS);
                         refs.addValueEventListener(new ValueEventListener() {
                             @Override
@@ -92,8 +95,18 @@ public class Login_page extends AppCompatActivity {
                                     Users idDetails = dataSnapshot.getValue(Users.class);
                                     UserArrayList.add(idDetails);
                                 }
+                                boolean EmailFound=false;
                                 for(Users user:UserArrayList){
-                                    Log.i(TAG,"Email: "+user.getEmail());
+                                    String searchEmail=user.getEmail();
+                                    if(searchEmail.equals(OtpEmail)){
+                                        EmailFound=true;
+                                        Verification.setVisibility(View.VISIBLE);
+                                        Verification.setImageResource(R.drawable.checksymbol);
+                                    }
+                                }
+                                if(!EmailFound){
+                                    Verification.setVisibility(View.VISIBLE);
+                                    Verification.setImageResource(R.drawable.wrongsymbol);
                                 }
                             }
 
