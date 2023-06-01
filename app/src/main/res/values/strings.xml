@@ -23,6 +23,6 @@
     <string name="need_an_account">Need an account?</string>
     <string name="app_logo">app logo</string>
     <string name="logout_button">Logout button</string>
-    <string name="send_otp">Send OTP</string>
+    <string name="send_otp">Get OTP</string>
     <string name="cancel">Cancel</string>
 </resources>

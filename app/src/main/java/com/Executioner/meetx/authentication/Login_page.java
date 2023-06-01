@@ -27,21 +27,31 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
+import java.util.ArrayList;
 import java.util.Objects;
 
 public class Login_page extends AppCompatActivity {
     String TAG = "login_page";
-    Button login;
+    Button login, getOTP;
     EditText email, password;
     ImageView hideBtn;
     FirebaseAuth auth;
     CheckBox remember_box;
-
+    EditText otpEmail;
     TextView forgot_password;
     LinearLayout accountSignUp;
     SharedPreferences sharedPreferences;
     AlertDialog.Builder OTP_generator;
+    ArrayList<Users> UserArrayList;
+    private DatabaseReference mDatabase;
+
+
     @SuppressLint("MissingInflatedId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,8 +64,8 @@ public class Login_page extends AppCompatActivity {
         final boolean[] visibility = {false};
         //storing data of the sharedpreference file into sharedpreference object
         SharedPreferences.Editor editor = sharedPreferences.edit();
-        String remember_password=sharedPreferences.getString(Constants.PASSWORD,Constants.NULL);
-        String remember_email=sharedPreferences.getString(Constants.EMAIL,Constants.NULL);
+        String remember_password = sharedPreferences.getString(Constants.PASSWORD, Constants.NULL);
+        String remember_email = sharedPreferences.getString(Constants.EMAIL, Constants.NULL);
 
         //todo- if clicked on forgot password -> redirect to a page -> enter a email and OTP -> verify OTP
         forgot_password.setOnClickListener(view -> {
@@ -67,15 +77,41 @@ public class Login_page extends AppCompatActivity {
 
             Button close = mView.findViewById(R.id.button_close);
             close.setOnClickListener(v -> alertDialog.dismiss());
+            getOTP = mView.findViewById(R.id.send_otp);
+            otpEmail = mView.findViewById(R.id.OTP_email);
+            getOTP.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (helper.validateEmail(otpEmail)) {
+                        DatabaseReference refs = mDatabase.child(Constants.USERS);
+                        refs.addValueEventListener(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                //getting all ids of users
+                                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                                    Users idDetails = dataSnapshot.getValue(Users.class);
+                                    UserArrayList.add(idDetails);
+                                }
+                                for(Users user:UserArrayList){
+                                    Log.i(TAG,"Email: "+user.getEmail());
+                                }
+                            }
 
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                            }
+                        });
+                    }
+                }
+            });
             alertDialog.show();
 
         });
 
-        if(remember_password.equals(Constants.NULL) && remember_email.equals(Constants.NULL)){
+        if (remember_password.equals(Constants.NULL) && remember_email.equals(Constants.NULL)) {
             remember_box.setChecked(false);
-        }
-        else{
+        } else {
             remember_box.setChecked(true);
             email.setText(remember_email);
             password.setText(remember_password);
@@ -88,10 +124,10 @@ public class Login_page extends AppCompatActivity {
                     editor.putString(Constants.EMAIL, Email);
                     editor.putString(Constants.PASSWORD, Password);
                     editor.apply();
-                }else if(sharedPreferences.contains(Constants.EMAIL) && sharedPreferences.contains(Constants.PASSWORD)) {
-                        editor.remove(Constants.EMAIL);
-                        editor.remove(Constants.PASSWORD);
-                        editor.apply();
+                } else if (sharedPreferences.contains(Constants.EMAIL) && sharedPreferences.contains(Constants.PASSWORD)) {
+                    editor.remove(Constants.EMAIL);
+                    editor.remove(Constants.PASSWORD);
+                    editor.apply();
                 }
                 auth.signInWithEmailAndPassword(Email, Password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                     @Override
@@ -126,19 +162,21 @@ public class Login_page extends AppCompatActivity {
             visibility[0] = !visibility[0];
         });
     }
+
     public void init() {
         accountSignUp = findViewById(R.id.accountSignUp);
         email = findViewById(R.id.login_email);
         password = findViewById(R.id.login_password);
         hideBtn = findViewById(R.id.eye_icon);
         login = findViewById(R.id.login_btn);
-        remember_box = findViewById(R.id.checkBox);
+        remember_box = findViewById(R.id.remember_box);
         forgot_password = findViewById(R.id.forgotpassword);
-//        close = findViewById(R.id.button_close);
-
         auth = FirebaseAuth.getInstance();
         sharedPreferences = getSharedPreferences(Constants.PREFERENCE, MODE_PRIVATE);
+        mDatabase = FirebaseDatabase.getInstance().getReference();
+        UserArrayList = new ArrayList<>();
     }
+
     public boolean confirmInput() {
         return !(!helper.validateEmail(email) | !helper.validatePassword(password));
     }

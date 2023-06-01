@@ -12,4 +12,5 @@ public class Constants {
     public static final String EMAIL="email";
     public static final String PASSWORD="password";
     public static final String NULL="null";
+    public static final String USERS="users";
 }

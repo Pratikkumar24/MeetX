@@ -88,7 +88,7 @@
             >
 
             <CheckBox
-                android:id="@+id/checkBox"
+                android:id="@+id/remember_box"
                 android:layout_width="wrap_content"
                 android:layout_height="30dp"
                 android:text="@string/remember_me"
