@@ -25,4 +25,5 @@
     <string name="logout_button">Logout button</string>
     <string name="send_otp">Get OTP</string>
     <string name="cancel">Cancel</string>
+    <string name="verification">Verification</string>
 </resources>
