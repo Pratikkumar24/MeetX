@@ -23,6 +23,7 @@ import android.widget.Toast;
 
 import com.Executioner.meetx.Homepage.homepage;
 import com.Executioner.meetx.R;
+import com.chaos.view.PinView;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
@@ -38,7 +39,8 @@ import java.util.Objects;
 
 public class Login_page extends AppCompatActivity {
     String TAG = "login_page";
-    Button login, getOTP;
+    Button login, getOTP, verifyEmail, verifyEmail_close, verifyOTP, verifyOTP_close;
+    PinView pinViewOTP;
     ImageView Verification;
     EditText email, password;
     ImageView hideBtn;
@@ -71,52 +73,72 @@ public class Login_page extends AppCompatActivity {
         //todo- if clicked on forgot password -> redirect to a page -> enter a email and OTP -> verify OTP
         forgot_password.setOnClickListener(view -> {
             OTP_generator = new AlertDialog.Builder(Login_page.this);
-            View mView = getLayoutInflater().inflate(R.layout.forgotpassworddialogbox, null);
+            View verifyEmailView = getLayoutInflater().inflate(R.layout.forgotpassworddialogbox, null);
             OTP_generator.setCancelable(false);
-            OTP_generator.setView(mView);
+            OTP_generator.setView(verifyEmailView);
             AlertDialog alertDialog = OTP_generator.create();
 
-            Button close = mView.findViewById(R.id.button_close);
-            close.setOnClickListener(v -> alertDialog.dismiss());
-            getOTP = mView.findViewById(R.id.send_otp);
-            otpEmail = mView.findViewById(R.id.OTP_email);
-            Verification=mView.findViewById(R.id.verification);
-            getOTP.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (helper.validateEmail(otpEmail)) {
-                        String OtpEmail=otpEmail.getText().toString();
-                        DatabaseReference refs = mDatabase.child(Constants.USERS);
-                        refs.addValueEventListener(new ValueEventListener() {
-                            @Override
-                            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                //getting all ids of users
-                                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
-                                    Users idDetails = dataSnapshot.getValue(Users.class);
-                                    UserArrayList.add(idDetails);
-                                }
-                                boolean EmailFound=false;
-                                for(Users user:UserArrayList){
-                                    String searchEmail=user.getEmail();
-                                    if(searchEmail.equals(OtpEmail)){
-                                        EmailFound=true;
-                                        Verification.setVisibility(View.VISIBLE);
-                                        Verification.setImageResource(R.drawable.checksymbol);
-                                    }
-                                }
-                                if(!EmailFound){
+            verifyEmail_close = verifyEmailView.findViewById(R.id.button_close);
+            getOTP = verifyEmailView.findViewById(R.id.send_otp);
+            otpEmail = verifyEmailView.findViewById(R.id.OTP_email);
+            Verification = verifyEmailView.findViewById(R.id.verification_check);
+            verifyEmail = verifyEmailView.findViewById(R.id.verifyEmail);
+
+
+            verifyEmail_close.setOnClickListener(closingDialog -> alertDialog.dismiss());
+            verifyEmail.setOnClickListener(verifyEmailview -> {
+                if (helper.validateEmail(otpEmail)) {
+                    String OtpEmail = otpEmail.getText().toString();
+                    DatabaseReference refs = mDatabase.child(Constants.USERS);
+                    refs.addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                            //getting all ids of users
+                            for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                                Users idDetails = dataSnapshot.getValue(Users.class);
+                                UserArrayList.add(idDetails);
+                            }
+                            boolean EmailFound = false;
+                            for (Users user : UserArrayList) {
+                                String searchEmail = user.getEmail();
+                                if (searchEmail.equals(OtpEmail)) {
+                                    EmailFound = true;
                                     Verification.setVisibility(View.VISIBLE);
-                                    Verification.setImageResource(R.drawable.wrongsymbol);
+                                    Verification.setImageResource(R.drawable.checksymbol);
                                 }
                             }
-
-                            @Override
-                            public void onCancelled(@NonNull DatabaseError databaseError) {
-
+                            if (!EmailFound) {
+                                Verification.setVisibility(View.VISIBLE);
+                                Verification.setImageResource(R.drawable.wrongsymbol);
+                            } else {
+                                //Enabling the getOTP button as the email is perfectly verified
+                                getOTP.setEnabled(true);
                             }
-                        });
-                    }
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                        }
+                    });
                 }
+            });
+            getOTP.setOnClickListener(getOtpEmail -> {
+                View verifyOTPview = getLayoutInflater().inflate(R.layout.verificationotp, null);
+                OTP_generator.setView(verifyOTPview);
+                AlertDialog verifydialog = OTP_generator.create();
+                alertDialog.dismiss();
+
+                verifyOTP_close = verifyOTPview.findViewById(R.id.button_close_OTP);
+                verifyOTP = verifyOTPview.findViewById(R.id.verfyOTP);
+                pinViewOTP = verifyOTPview.findViewById(R.id.pinview);
+
+                verifyOTP_close.setOnClickListener(closingDialog -> verifydialog.dismiss());
+                verifyOTP.setOnClickListener(verifingOTP -> {
+                    String OTP = Objects.requireNonNull(pinViewOTP.getText()).toString();
+                    Toast.makeText(getApplicationContext(), OTP, Toast.LENGTH_SHORT).show();
+                });
+                verifydialog.show();
             });
             alertDialog.show();
 
@@ -194,4 +216,5 @@ public class Login_page extends AppCompatActivity {
         return !(!helper.validateEmail(email) | !helper.validatePassword(password));
     }
 }
+
 
