@@ -25,5 +25,8 @@
     <string name="logout_button">Logout button</string>
     <string name="send_otp">Get OTP</string>
     <string name="cancel">Cancel</string>
-    <string name="verification">Verification</string>
+    <string name="verification">Verification_check</string>
+    <string name="enter_otp">Enter OTP</string>
+    <string name="verify_email">Verify email</string>
+    <string name="verify">Verify</string>
 </resources>
