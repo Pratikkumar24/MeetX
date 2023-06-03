@@ -16,4 +16,5 @@ public class Constants {
     public static final String USERS="users";
     public static final int HIGH_BOUND=9999;
     public static final int LOW_BOUND=1000;
+    public static final long START_TIME_MILLIS= 60000;
 }

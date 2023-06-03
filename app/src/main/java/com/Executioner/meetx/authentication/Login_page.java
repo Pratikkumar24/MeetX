@@ -8,6 +8,7 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.telephony.SmsManager;
 import android.text.method.HideReturnsTransformationMethod;
 import android.text.method.PasswordTransformationMethod;
@@ -32,12 +33,15 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.Locale;
 import java.util.Objects;
 import java.util.Random;
 
 public class Login_page extends AppCompatActivity {
     String TAG = "login_page";
+    private CountDownTimer mCountDownTimer;
     Button login, getOTP, verifyEmail, verifyEmail_close, verifyOTP, verifyOTP_close;
+    TextView timerText;
     PinView pinViewOTP;
     ImageView Verification;
     EditText email, password;
@@ -52,6 +56,11 @@ public class Login_page extends AppCompatActivity {
     ArrayList<Users> UserArrayList;
     private DatabaseReference mDatabase;
     private String OtpPhoneNumber;
+    private long mTimeLeftInMillis;
+    private TextView resendOTP;
+    private int high, low;
+    private Random rand;
+    private int generatedOTP;
 
     @SuppressLint("MissingInflatedId")
     @Override
@@ -124,6 +133,7 @@ public class Login_page extends AppCompatActivity {
                 }
             });
             getOTP.setOnClickListener(getOtpEmail -> {
+                CountDownStart();
                 View verifyOTPview = getLayoutInflater().inflate(R.layout.verificationotp, null);
                 OTP_generator.setView(verifyOTPview);
                 AlertDialog verifydialog = OTP_generator.create();
@@ -132,21 +142,14 @@ public class Login_page extends AppCompatActivity {
                 verifyOTP_close = verifyOTPview.findViewById(R.id.button_close_OTP);
                 verifyOTP = verifyOTPview.findViewById(R.id.verfyOTP);
                 pinViewOTP = verifyOTPview.findViewById(R.id.pinview);
-                Random rand= new Random();
-                int high=Constants.HIGH_BOUND;
-                int low=Constants.LOW_BOUND;
-                int generatedOTP=rand.nextInt(high-low)+low;
-                String SMS_MSG = "MeetX OTP: "+ generatedOTP;
-                sendSMS(OtpPhoneNumber, SMS_MSG);
-                Log.i(TAG,"Generated OTP on mobile Number: " + OtpPhoneNumber + " : "+generatedOTP);
+                timerText = verifyOTPview.findViewById(R.id.TimerText);
                 verifyOTP_close.setOnClickListener(closingDialog -> verifydialog.dismiss());
+                int generatedOTP = getGeneratedAndSMSOTP();
+                Log.i(TAG, "Generated OTP on mobile Number: " + OtpPhoneNumber + " : " + generatedOTP);
                 verifyOTP.setOnClickListener(verifingOTP -> {
-                    int enteredOTP = Integer.parseInt(Objects.requireNonNull(pinViewOTP.getText()).toString());
-                    if(generatedOTP==enteredOTP) {
-                        Toast.makeText(getApplicationContext(), "Verified", Toast.LENGTH_SHORT).show();
-                    }
-                   else Toast.makeText(getApplicationContext(), "Wrong OTP entered", Toast.LENGTH_SHORT).show();
+                    OTPVerification(generatedOTP);
                 });
+
                 verifydialog.show();
             });
             alertDialog.show();
@@ -204,6 +207,26 @@ public class Login_page extends AppCompatActivity {
         });
     }
 
+    private void OTPVerification(int generatedOTP) {
+        int enteredOTP = Integer.parseInt(Objects.requireNonNull(pinViewOTP.getText()).toString());
+        if (String.valueOf(enteredOTP).length() == 4) {
+            if (generatedOTP == enteredOTP) {
+                Toast.makeText(getApplicationContext(), "Verified", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(getApplicationContext(), homepage.class);
+                startActivity(intent);
+                finish();
+            } else {
+                Toast.makeText(getApplicationContext(), "Wrong OTP entered", Toast.LENGTH_SHORT).show();
+                mCountDownTimer.cancel();
+                ResendOTP();
+            }
+        } else {
+            Toast.makeText(getApplicationContext(), "Please enter OTP", Toast.LENGTH_SHORT).show();
+            if (String.valueOf(enteredOTP).length() != 0)
+                pinViewOTP.getText().clear();
+        }
+    }
+
     public void init() {
         accountSignUp = findViewById(R.id.accountSignUp);
         email = findViewById(R.id.login_email);
@@ -216,26 +239,78 @@ public class Login_page extends AppCompatActivity {
         sharedPreferences = getSharedPreferences(Constants.PREFERENCE, MODE_PRIVATE);
         mDatabase = FirebaseDatabase.getInstance().getReference();
         UserArrayList = new ArrayList<>();
+        high = Constants.HIGH_BOUND;
+        low = Constants.LOW_BOUND;
+        rand = new Random();
+        resendOTP = findViewById(R.id.resendOTP);
+        generatedOTP=1234;
+        // mTimeLeftInMillis=Constants.START_TIME_MILLIS;
     }
 
     public boolean confirmInput() {
         return !(!helper.validateEmail(email) | !helper.validatePassword(password));
     }
+
     public void sendSMS(String phoneNo, String msg) {
         try {
             SmsManager smsManager = SmsManager.getDefault();
 
             smsManager.sendTextMessage(phoneNo, null, msg, null, null);
 
+
             Toast.makeText(getApplicationContext(), "Message Sent",
                     Toast.LENGTH_LONG).show();
         } catch (Exception ex) {
-            Toast.makeText(getApplicationContext(),ex.getMessage().toString(),
+            Toast.makeText(getApplicationContext(), ex.getMessage(),
                     Toast.LENGTH_LONG).show();
-            Log.i(TAG,"SMS Exception:"+ex.getMessage().toString());
+            Log.i(TAG, "SMS Exception:" + ex.getMessage());
             ex.printStackTrace();
         }
     }
-}
 
+    public void CountDownStart() {
+        mTimeLeftInMillis = Constants.START_TIME_MILLIS;
+        mCountDownTimer = new CountDownTimer(mTimeLeftInMillis, 1000) {
+            @SuppressLint("SetTextI18n")
+            public void onTick(long millisUntilFinished) {
+                // Used for formatting digit to be in 2 digits only
+                mTimeLeftInMillis = millisUntilFinished;
+                int min = (int) (mTimeLeftInMillis / 1000) / 60;
+                int sec = (int) (mTimeLeftInMillis / 1000) % 60;
+                String timeLeftFormatted = String.format(Locale.getDefault(), "%02d:%02d", min, sec);
+                timerText.setText(timeLeftFormatted);
+            }
+
+            // When the task is over it will print 00:00:00 there
+            @SuppressLint("SetTextI18n")
+            public void onFinish() {
+                ResendOTP();
+            }
+        }.start();
+    }
+
+    @SuppressLint("SetTextI18n")
+    private void ResendOTP() {
+        Objects.requireNonNull(pinViewOTP.getText()).clear();
+        timerText.setText("00:00");
+        resendOTP.setEnabled(true);
+        resendOTP.setOnClickListener(v -> {
+            CountDownStart();
+            generatedOTP = getGeneratedAndSMSOTP();
+        });
+        verifyOTP.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                OTPVerification(generatedOTP);
+            }
+        });
+    }
+
+    private int getGeneratedAndSMSOTP() {
+        int generatedOTP = rand.nextInt(high - low) + low;
+        String SMS_MSG = "MeetX OTP: " + generatedOTP;
+        sendSMS(OtpPhoneNumber, SMS_MSG);
+        return generatedOTP;
+    }
+}
 
