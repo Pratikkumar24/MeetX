@@ -5,7 +5,6 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.annotation.SuppressLint;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -24,9 +23,6 @@ import android.widget.Toast;
 import com.Executioner.meetx.Homepage.homepage;
 import com.Executioner.meetx.R;
 import com.chaos.view.PinView;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -54,7 +50,7 @@ public class Login_page extends AppCompatActivity {
     AlertDialog.Builder OTP_generator;
     ArrayList<Users> UserArrayList;
     private DatabaseReference mDatabase;
-
+    private String OtpPhoneNumber;
 
     @SuppressLint("MissingInflatedId")
     @Override
@@ -90,6 +86,7 @@ public class Login_page extends AppCompatActivity {
             verifyEmail.setOnClickListener(verifyEmailview -> {
                 if (helper.validateEmail(otpEmail)) {
                     String OtpEmail = otpEmail.getText().toString();
+                    OtpPhoneNumber = Constants.DEFAULT_PHONE_NUMBER;
                     DatabaseReference refs = mDatabase.child(Constants.USERS);
                     refs.addValueEventListener(new ValueEventListener() {
                         @Override
@@ -104,6 +101,7 @@ public class Login_page extends AppCompatActivity {
                                 String searchEmail = user.getEmail();
                                 if (searchEmail.equals(OtpEmail)) {
                                     EmailFound = true;
+                                    OtpPhoneNumber = user.getPhoneNo();
                                     Verification.setVisibility(View.VISIBLE);
                                     Verification.setImageResource(R.drawable.checksymbol);
                                 }
@@ -134,10 +132,10 @@ public class Login_page extends AppCompatActivity {
                 verifyOTP = verifyOTPview.findViewById(R.id.verfyOTP);
                 pinViewOTP = verifyOTPview.findViewById(R.id.pinview);
                 Random rand= new Random();
-                int high=Constants.HIGHBOUND;
-                int low=Constants.LOWBOUND;
+                int high=Constants.HIGH_BOUND;
+                int low=Constants.LOW_BOUND;
                 int generatedOTP=rand.nextInt(high-low)+low;
-                Log.i(TAG,"Generated OTP: "+generatedOTP);
+                Log.i(TAG,"Generated OTP on mobile Number: " + OtpPhoneNumber + " : "+generatedOTP);
                 verifyOTP_close.setOnClickListener(closingDialog -> verifydialog.dismiss());
                 verifyOTP.setOnClickListener(verifingOTP -> {
                     int enteredOTP = Integer.parseInt(Objects.requireNonNull(pinViewOTP.getText()).toString());
@@ -172,18 +170,15 @@ public class Login_page extends AppCompatActivity {
                     editor.remove(Constants.PASSWORD);
                     editor.apply();
                 }
-                auth.signInWithEmailAndPassword(Email, Password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (task.isSuccessful()) {
+                auth.signInWithEmailAndPassword(Email, Password).addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
 
-                            Intent intent = new Intent(getApplicationContext(), homepage.class);
-                            startActivity(intent);
-                            finish();
+                        Intent intent = new Intent(getApplicationContext(), homepage.class);
+                        startActivity(intent);
+                        finish();
 
-                        } else {
-                            Toast.makeText(Login_page.this, Objects.requireNonNull(task.getException()).getMessage(), Toast.LENGTH_SHORT).show();
-                        }
+                    } else {
+                        Toast.makeText(Login_page.this, Objects.requireNonNull(task.getException()).getMessage(), Toast.LENGTH_SHORT).show();
                     }
                 });
             }

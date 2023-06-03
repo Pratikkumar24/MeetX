@@ -1,14 +1,17 @@
 package com.Executioner.meetx.authentication;
 
 public class Users {
-    String username;
-    String password;
-    String email;
+    private String username;
+    private String password;
+    private String email;
+    private String phoneNo;
     public Users(){
         this.username=Constants.DEFAULT_USERNAME;
         this.email=Constants.DEFAULT_EMAIL;
         this.password=Constants.DEFAULT_PASSWORD;
+        this.phoneNo = Constants.DEFAULT_PHONE_NUMBER;
     }
+    public String getPhoneNo(){ return this.phoneNo;}
     public String getUsername(){
         return this.username;
     }
@@ -27,7 +30,8 @@ public class Users {
     public void setEmail(String email){
         this.email=email;
     }
+    public void setPhoneNo(String phoneNo) { this.phoneNo = phoneNo;}
     public String getMetadata(){
-      return this.username+"$"+ this.password+"$"+ this.email;
+      return this.username+"$"+ this.password+"$"+ this.email+"$"+this.phoneNo;
     }
 }

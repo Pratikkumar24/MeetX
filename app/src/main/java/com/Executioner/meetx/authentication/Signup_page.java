@@ -51,64 +51,57 @@ String TAG = "signup_page";
 
         final boolean[] visibility = {false};
         init();
-        signUp.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if(confirmInput())
-                {
-                    String UserName = username.getText().toString();
-                    String Password = password.getText().toString();
-                    String Email = email.getText().toString();
-                    Log.i(TAG,username+"$"+password+"$"+email);
-                    //putting into database
-//                    auth.createUserWithEmailAndPassword(Email,Password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-//                        @Override
-//                        public void onComplete(@NonNull Task<AuthResult> task) {
-//                            if(task.isSuccessful()){
-//                                String id= Objects.requireNonNull(task.getResult().getUser()).getUid();
-//                                DatabaseReference reference = database.getReference().child("users").child(id);
-//                                Users user=new Users();
-//                                user.setUsername(UserName);
-//                                user.setPassword(Password);
-//                                user.setEmail(Email);
-//                                reference.setValue(user).addOnCompleteListener(new OnCompleteListener<Void>() {
-//                                    @Override
-//                                    public void onComplete(@NonNull Task<Void> task) {
-//                                        if(task.isSuccessful()){
-//                                            Intent intent=new Intent(getApplicationContext(), homepage.class);
-//                                            startActivity(intent);
-//                                            finish();
-//                                        }else{
-//                                            Log.i(TAG,"Error in creating account");
-//                                            Toast.makeText(getApplicationContext(),"Error in creating account",Toast.LENGTH_SHORT).show();
-//                                        }
-//                                    }
-//                                });
-//                            }
-//                            else{
-//                                Log.i(TAG,"Exception in creating user");
-//                                Toast.makeText(getApplicationContext(), Objects.requireNonNull(task.getException()).getMessage(),Toast.LENGTH_SHORT).show();
-//                            }
-//                        }
-//                    });
-                }
+        signUp.setOnClickListener(view -> {
+            if(confirmInput())
+            {
+                String UserName = username.getText().toString();
+                String Password = password.getText().toString();
+                String Email = email.getText().toString();
+                String PhoneNo = phoneNum.getText().toString();
+                Log.i(TAG,UserName+"$"+Password+"$"+Email+"&"+Password);
+                //putting into database
+                auth.createUserWithEmailAndPassword(Email,Password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if(task.isSuccessful()){
+                            String id= Objects.requireNonNull(task.getResult().getUser()).getUid();
+                            DatabaseReference reference = database.getReference().child(Constants.USERS).child(id);
+                            Users user=new Users();
+                            user.setUsername(UserName);
+                            user.setPassword(Password);
+                            user.setEmail(Email);
+                            user.setPhoneNo(PhoneNo);
+                            reference.setValue(user).addOnCompleteListener(completionTask -> {
+                                if(completionTask.isSuccessful()){
+                                    Intent intent=new Intent(getApplicationContext(), homepage.class);
+                                    startActivity(intent);
+                                    finish();
+                                }else{
+                                    Log.i(TAG,"Error in creating account");
+                                    Toast.makeText(getApplicationContext(),"Error in creating account",Toast.LENGTH_SHORT).show();
+                                }
+                            });
+                        }
+                        else{
+                            Log.i(TAG,"Exception in creating user");
+                            Toast.makeText(getApplicationContext(), Objects.requireNonNull(task.getException()).getMessage(),Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
             }
         });
-        hide.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
+        hide.setOnClickListener(view -> {
 
-                if(!visibility[0])
-                {
-                    hide.setImageResource(R.drawable.unhideeye);
-                    password.setTransformationMethod(HideReturnsTransformationMethod.getInstance());
-                }
-                else {
-                    hide.setImageResource(R.drawable.hide_eye);
-                    password.setTransformationMethod(PasswordTransformationMethod.getInstance());
-                }
-                visibility[0] = !visibility[0];
+            if(!visibility[0])
+            {
+                hide.setImageResource(R.drawable.unhideeye);
+                password.setTransformationMethod(HideReturnsTransformationMethod.getInstance());
             }
+            else {
+                hide.setImageResource(R.drawable.hide_eye);
+                password.setTransformationMethod(PasswordTransformationMethod.getInstance());
+            }
+            visibility[0] = !visibility[0];
         });
         alreadyMember.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -131,10 +124,8 @@ String TAG = "signup_page";
       phoneNum=findViewById(R.id.phoneNum);
   }
     public boolean confirmInput() {
-        if (!helper.validateEmail(email) | !helper.validateUsername(username) | !helper.validatePassword(password) | !helper.validatePhoneNumber(phoneNum)) {
-            return false;
-        }
-        return true;
+        return !(!helper.validateEmail(email) | !helper.validateUsername(username) |
+                !helper.validatePassword(password) | !helper.validatePhoneNumber(phoneNum));
     }
 
 }
