@@ -7,6 +7,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.telephony.SmsManager;
@@ -243,7 +244,7 @@ public class Login_page extends AppCompatActivity {
         high = Constants.HIGH_BOUND;
         low = Constants.LOW_BOUND;
         rand = new Random();
-        generatedOTP="1234";
+        generatedOTP = "1234";
         // mTimeLeftInMillis=Constants.START_TIME_MILLIS;
     }
 
@@ -263,7 +264,6 @@ public class Login_page extends AppCompatActivity {
         } catch (Exception ex) {
             Toast.makeText(getApplicationContext(), ex.getMessage(),
                     Toast.LENGTH_LONG).show();
-            Log.i(TAG, "SMS Exception:" + ex.getMessage());
             ex.printStackTrace();
         }
     }
@@ -289,18 +289,20 @@ public class Login_page extends AppCompatActivity {
         }.start();
     }
 
-    @SuppressLint("SetTextI18n")
+    @SuppressLint({"SetTextI18n", "ResourceAsColor"})
     private void ResendOTP() {
-        Log.i(TAG,"Reached ResendOTP");
         Objects.requireNonNull(pinViewOTP.getText()).clear();
         timerText.setText("00:00");
         resendOTP.setEnabled(true);
+        resendOTP.setTextColor(Color.BLACK);
         resendOTP.setOnClickListener(v -> {
             CountDownStart();
             generatedOTP = getGeneratedAndSMSOTP();
+            resendOTP.setEnabled(false);
+            resendOTP.setTextColor(Color.GRAY);
         });
-        verifyOTP.setOnClickListener(v ->{
-                OTPVerification(generatedOTP);
+        verifyOTP.setOnClickListener(v -> {
+            OTPVerification(generatedOTP);
         });
     }
 

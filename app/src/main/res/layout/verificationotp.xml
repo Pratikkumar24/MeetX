@@ -72,6 +72,7 @@
             android:gravity="center"
             android:enabled="false"
             android:text="@string/resend_otp"
+            android:textColor="@color/gray"
             android:textSize="20sp" />
 
     </LinearLayout>
