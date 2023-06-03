@@ -13,4 +13,6 @@ public class Constants {
     public static final String PASSWORD="password";
     public static final String NULL="null";
     public static final String USERS="users";
+    public static final int HIGHBOUND=9999;
+    public static final int LOWBOUND=1000;
 }

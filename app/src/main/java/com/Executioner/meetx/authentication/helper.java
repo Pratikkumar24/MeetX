@@ -70,4 +70,19 @@ public class helper {
             return true;
         }
     }
+
+    public static boolean validatePhoneNumber(EditText PhoneNum) {
+        String phoneNumInput = PhoneNum.getText().toString().trim();
+
+        if (phoneNumInput.isEmpty()) {
+            PhoneNum.setError("Field can't be empty");
+            return false;
+        } else if (phoneNumInput.length()!=10) {
+            PhoneNum.setError("Please enter 10 digits phone number");
+            return false;
+        } else {
+            PhoneNum.setError(null);
+            return true;
+        }
+    }
 }
