@@ -60,7 +60,7 @@ public class Login_page extends AppCompatActivity {
     private TextView resendOTP;
     private int high, low;
     private Random rand;
-    private int generatedOTP;
+    private String generatedOTP;
 
     @SuppressLint("MissingInflatedId")
     @Override
@@ -143,8 +143,9 @@ public class Login_page extends AppCompatActivity {
                 verifyOTP = verifyOTPview.findViewById(R.id.verfyOTP);
                 pinViewOTP = verifyOTPview.findViewById(R.id.pinview);
                 timerText = verifyOTPview.findViewById(R.id.TimerText);
+                resendOTP = verifyOTPview.findViewById(R.id.resendOTP);
                 verifyOTP_close.setOnClickListener(closingDialog -> verifydialog.dismiss());
-                int generatedOTP = getGeneratedAndSMSOTP();
+                String generatedOTP = getGeneratedAndSMSOTP();
                 Log.i(TAG, "Generated OTP on mobile Number: " + OtpPhoneNumber + " : " + generatedOTP);
                 verifyOTP.setOnClickListener(verifingOTP -> {
                     OTPVerification(generatedOTP);
@@ -207,10 +208,10 @@ public class Login_page extends AppCompatActivity {
         });
     }
 
-    private void OTPVerification(int generatedOTP) {
-        int enteredOTP = Integer.parseInt(Objects.requireNonNull(pinViewOTP.getText()).toString());
+    private void OTPVerification(String generatedOTP) {
+        String enteredOTP = String.valueOf(pinViewOTP.getText());
         if (String.valueOf(enteredOTP).length() == 4) {
-            if (generatedOTP == enteredOTP) {
+            if (generatedOTP.equals(enteredOTP)) {
                 Toast.makeText(getApplicationContext(), "Verified", Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(getApplicationContext(), homepage.class);
                 startActivity(intent);
@@ -242,8 +243,7 @@ public class Login_page extends AppCompatActivity {
         high = Constants.HIGH_BOUND;
         low = Constants.LOW_BOUND;
         rand = new Random();
-        resendOTP = findViewById(R.id.resendOTP);
-        generatedOTP=1234;
+        generatedOTP="1234";
         // mTimeLeftInMillis=Constants.START_TIME_MILLIS;
     }
 
@@ -291,6 +291,7 @@ public class Login_page extends AppCompatActivity {
 
     @SuppressLint("SetTextI18n")
     private void ResendOTP() {
+        Log.i(TAG,"Reached ResendOTP");
         Objects.requireNonNull(pinViewOTP.getText()).clear();
         timerText.setText("00:00");
         resendOTP.setEnabled(true);
@@ -298,16 +299,13 @@ public class Login_page extends AppCompatActivity {
             CountDownStart();
             generatedOTP = getGeneratedAndSMSOTP();
         });
-        verifyOTP.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+        verifyOTP.setOnClickListener(v ->{
                 OTPVerification(generatedOTP);
-            }
         });
     }
 
-    private int getGeneratedAndSMSOTP() {
-        int generatedOTP = rand.nextInt(high - low) + low;
+    private String getGeneratedAndSMSOTP() {
+        String generatedOTP = String.valueOf(rand.nextInt(high - low) + low);
         String SMS_MSG = "MeetX OTP: " + generatedOTP;
         sendSMS(OtpPhoneNumber, SMS_MSG);
         return generatedOTP;
