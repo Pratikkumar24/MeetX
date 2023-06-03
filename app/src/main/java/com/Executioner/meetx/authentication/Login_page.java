@@ -8,6 +8,7 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.telephony.SmsManager;
 import android.text.method.HideReturnsTransformationMethod;
 import android.text.method.PasswordTransformationMethod;
 import android.util.Log;
@@ -135,6 +136,7 @@ public class Login_page extends AppCompatActivity {
                 int high=Constants.HIGH_BOUND;
                 int low=Constants.LOW_BOUND;
                 int generatedOTP=rand.nextInt(high-low)+low;
+                sendSMS(OtpPhoneNumber, String.valueOf(generatedOTP));
                 Log.i(TAG,"Generated OTP on mobile Number: " + OtpPhoneNumber + " : "+generatedOTP);
                 verifyOTP_close.setOnClickListener(closingDialog -> verifydialog.dismiss());
                 verifyOTP.setOnClickListener(verifingOTP -> {
@@ -217,6 +219,19 @@ public class Login_page extends AppCompatActivity {
 
     public boolean confirmInput() {
         return !(!helper.validateEmail(email) | !helper.validatePassword(password));
+    }
+    public void sendSMS(String phoneNo, String msg) {
+        try {
+            SmsManager smsManager = SmsManager.getDefault();
+            smsManager.sendTextMessage(phoneNo, null, msg, null, null);
+            Toast.makeText(getApplicationContext(), "Message Sent",
+                    Toast.LENGTH_LONG).show();
+        } catch (Exception ex) {
+            Toast.makeText(getApplicationContext(),ex.getMessage().toString(),
+                    Toast.LENGTH_LONG).show();
+            Log.i(TAG,"SMS Exception:"+ex.getMessage().toString());
+            ex.printStackTrace();
+        }
     }
 }
 
