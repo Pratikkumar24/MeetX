@@ -36,6 +36,7 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.Objects;
+import java.util.Random;
 
 public class Login_page extends AppCompatActivity {
     String TAG = "login_page";
@@ -132,11 +133,18 @@ public class Login_page extends AppCompatActivity {
                 verifyOTP_close = verifyOTPview.findViewById(R.id.button_close_OTP);
                 verifyOTP = verifyOTPview.findViewById(R.id.verfyOTP);
                 pinViewOTP = verifyOTPview.findViewById(R.id.pinview);
-
+                Random rand= new Random();
+                int high=Constants.HIGHBOUND;
+                int low=Constants.LOWBOUND;
+                int generatedOTP=rand.nextInt(high-low)+low;
+                Log.i(TAG,"Generated OTP: "+generatedOTP);
                 verifyOTP_close.setOnClickListener(closingDialog -> verifydialog.dismiss());
                 verifyOTP.setOnClickListener(verifingOTP -> {
-                    String OTP = Objects.requireNonNull(pinViewOTP.getText()).toString();
-                    Toast.makeText(getApplicationContext(), OTP, Toast.LENGTH_SHORT).show();
+                    int enteredOTP = Integer.parseInt(Objects.requireNonNull(pinViewOTP.getText()).toString());
+                    if(generatedOTP==enteredOTP) {
+                        Toast.makeText(getApplicationContext(), "Verified", Toast.LENGTH_SHORT).show();
+                    }
+                   else Toast.makeText(getApplicationContext(), "Wrong OTP entered", Toast.LENGTH_SHORT).show();
                 });
                 verifydialog.show();
             });

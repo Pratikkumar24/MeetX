@@ -34,7 +34,7 @@ import java.util.regex.Pattern;
 
 public class Signup_page extends AppCompatActivity {
 
-EditText username, password, email;
+EditText username, password, email,phoneNum;
 Button signUp;
 ImageView hide;
 LinearLayout alreadyMember;
@@ -50,14 +50,7 @@ String TAG = "signup_page";
 
 
         final boolean[] visibility = {false};
-        auth = FirebaseAuth.getInstance();
-        database = FirebaseDatabase.getInstance();
-        alreadyMember = findViewById(R.id.alreadyMemberLogin);
-        hide = findViewById(R.id.hideBtn);
-        username = findViewById(R.id.username);
-        email = findViewById(R.id.email);
-        signUp = findViewById(R.id.signup_btn);
-        password = findViewById(R.id.password);
+        init();
         signUp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -68,36 +61,36 @@ String TAG = "signup_page";
                     String Email = email.getText().toString();
                     Log.i(TAG,username+"$"+password+"$"+email);
                     //putting into database
-                    auth.createUserWithEmailAndPassword(Email,Password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-                        @Override
-                        public void onComplete(@NonNull Task<AuthResult> task) {
-                            if(task.isSuccessful()){
-                                String id= Objects.requireNonNull(task.getResult().getUser()).getUid();
-                                DatabaseReference reference = database.getReference().child("users").child(id);
-                                Users user=new Users();
-                                user.setUsername(UserName);
-                                user.setPassword(Password);
-                                user.setEmail(Email);
-                                reference.setValue(user).addOnCompleteListener(new OnCompleteListener<Void>() {
-                                    @Override
-                                    public void onComplete(@NonNull Task<Void> task) {
-                                        if(task.isSuccessful()){
-                                            Intent intent=new Intent(getApplicationContext(), homepage.class);
-                                            startActivity(intent);
-                                            finish();
-                                        }else{
-                                            Log.i(TAG,"Error in creating account");
-                                            Toast.makeText(getApplicationContext(),"Error in creating account",Toast.LENGTH_SHORT).show();
-                                        }
-                                    }
-                                });
-                            }
-                            else{
-                                Log.i(TAG,"Exception in creating user");
-                                Toast.makeText(getApplicationContext(), Objects.requireNonNull(task.getException()).getMessage(),Toast.LENGTH_SHORT).show();
-                            }
-                        }
-                    });
+//                    auth.createUserWithEmailAndPassword(Email,Password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+//                        @Override
+//                        public void onComplete(@NonNull Task<AuthResult> task) {
+//                            if(task.isSuccessful()){
+//                                String id= Objects.requireNonNull(task.getResult().getUser()).getUid();
+//                                DatabaseReference reference = database.getReference().child("users").child(id);
+//                                Users user=new Users();
+//                                user.setUsername(UserName);
+//                                user.setPassword(Password);
+//                                user.setEmail(Email);
+//                                reference.setValue(user).addOnCompleteListener(new OnCompleteListener<Void>() {
+//                                    @Override
+//                                    public void onComplete(@NonNull Task<Void> task) {
+//                                        if(task.isSuccessful()){
+//                                            Intent intent=new Intent(getApplicationContext(), homepage.class);
+//                                            startActivity(intent);
+//                                            finish();
+//                                        }else{
+//                                            Log.i(TAG,"Error in creating account");
+//                                            Toast.makeText(getApplicationContext(),"Error in creating account",Toast.LENGTH_SHORT).show();
+//                                        }
+//                                    }
+//                                });
+//                            }
+//                            else{
+//                                Log.i(TAG,"Exception in creating user");
+//                                Toast.makeText(getApplicationContext(), Objects.requireNonNull(task.getException()).getMessage(),Toast.LENGTH_SHORT).show();
+//                            }
+//                        }
+//                    });
                 }
             }
         });
@@ -126,9 +119,19 @@ String TAG = "signup_page";
             }
         });
     }
-
+  public void init(){
+      auth = FirebaseAuth.getInstance();
+      database = FirebaseDatabase.getInstance();
+      alreadyMember = findViewById(R.id.alreadyMemberLogin);
+      hide = findViewById(R.id.hideBtn);
+      username = findViewById(R.id.username);
+      email = findViewById(R.id.email);
+      signUp = findViewById(R.id.signup_btn);
+      password = findViewById(R.id.password);
+      phoneNum=findViewById(R.id.phoneNum);
+  }
     public boolean confirmInput() {
-        if (!helper.validateEmail(email) | !helper.validateUsername(username) | !helper.validatePassword(password)) {
+        if (!helper.validateEmail(email) | !helper.validateUsername(username) | !helper.validatePassword(password) | !helper.validatePhoneNumber(phoneNum)) {
             return false;
         }
         return true;
