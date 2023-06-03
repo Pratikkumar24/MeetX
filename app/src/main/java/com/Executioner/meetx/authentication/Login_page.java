@@ -136,7 +136,8 @@ public class Login_page extends AppCompatActivity {
                 int high=Constants.HIGH_BOUND;
                 int low=Constants.LOW_BOUND;
                 int generatedOTP=rand.nextInt(high-low)+low;
-                sendSMS(OtpPhoneNumber, String.valueOf(generatedOTP));
+                String SMS_MSG = "MeetX OTP: "+ generatedOTP;
+                sendSMS(OtpPhoneNumber, SMS_MSG);
                 Log.i(TAG,"Generated OTP on mobile Number: " + OtpPhoneNumber + " : "+generatedOTP);
                 verifyOTP_close.setOnClickListener(closingDialog -> verifydialog.dismiss());
                 verifyOTP.setOnClickListener(verifingOTP -> {
@@ -223,7 +224,9 @@ public class Login_page extends AppCompatActivity {
     public void sendSMS(String phoneNo, String msg) {
         try {
             SmsManager smsManager = SmsManager.getDefault();
+
             smsManager.sendTextMessage(phoneNo, null, msg, null, null);
+
             Toast.makeText(getApplicationContext(), "Message Sent",
                     Toast.LENGTH_LONG).show();
         } catch (Exception ex) {

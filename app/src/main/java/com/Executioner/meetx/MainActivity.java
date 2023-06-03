@@ -1,14 +1,21 @@
 package com.Executioner.meetx;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
 
 import com.Executioner.meetx.Homepage.homepage;
 import com.Executioner.meetx.authentication.Login_page;
@@ -24,7 +31,7 @@ public class MainActivity extends AppCompatActivity {
     Button login_btn;
     Button signup_btn;
     FirebaseAuth auth;
-
+    private final int STORAGE_PERMISSION_CODE = 1;
     @SuppressLint("MissingInflatedId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,6 +39,15 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         auth = FirebaseAuth.getInstance();
         getSupportActionBar().hide();
+
+        if(ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.SEND_SMS) == PackageManager.PERMISSION_GRANTED)
+        {
+            Toast.makeText(getApplicationContext(), "Permission already given", Toast.LENGTH_SHORT).show();
+        }
+        else {
+            requestStoragePermission();
+        }
+
 
         //todo - redirect to the homepage if a user is already logged in
 
@@ -53,5 +69,19 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+    }
+    private void requestStoragePermission() {
+        if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.SEND_SMS)) {
+            new AlertDialog.Builder(this)
+                    .setTitle("Permission needed")
+                    .setMessage("This permission is needed for OTP")
+                    .setPositiveButton("ok", (dialog, which) -> ActivityCompat.requestPermissions(MainActivity.this,
+                            new String[] {Manifest.permission.SEND_SMS}, STORAGE_PERMISSION_CODE))
+                    .setNegativeButton("cancel", (dialog, which) -> dialog.dismiss())
+                    .create().show();
+        } else {
+            ActivityCompat.requestPermissions(this,
+                    new String[] {Manifest.permission.SEND_SMS}, STORAGE_PERMISSION_CODE);
+        }
     }
 }
