@@ -42,6 +42,10 @@
             android:name=".MainActivity"
             android:exported="false"
             android:theme="@style/Theme.AppCompat.Light" />
+        <activity
+            android:name=".authentication.changePassword.reEnterPassword"
+            android:exported="false"
+            android:theme="@style/Theme.AppCompat.Light"/>
     </application>
 
 </manifest>

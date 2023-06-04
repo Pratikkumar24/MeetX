@@ -31,4 +31,11 @@
     <string name="verify_email">Verify email</string>
     <string name="verify">Verify</string>
     <string name="resend_otp">Resend OTP</string>
+    <string name="re_enter_your_new_password">Re-Enter your password</string>
+    <string name="submit">Submit</string>
+    <string name="todo">TODO</string>
+    <string name="confirm_password">Confirm password\n</string>
+    <string name="new_password_text">New password\n</string>
+    <string name="new_password">Enter your new password</string>
+    <string name="change_password">Change Password</string>
 </resources>
