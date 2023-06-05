@@ -86,25 +86,24 @@ public class Login_page extends AppCompatActivity {
             OTP_generator.setCancelable(false);
             OTP_generator.setView(verifyEmailView);
             AlertDialog alertDialog = OTP_generator.create();
-
             verifyEmail_close = verifyEmailView.findViewById(R.id.button_close);
             getOTP = verifyEmailView.findViewById(R.id.send_otp);
             otpEmail = verifyEmailView.findViewById(R.id.OTP_email);
             Verification = verifyEmailView.findViewById(R.id.verification_check);
             verifyEmail = verifyEmailView.findViewById(R.id.verifyEmail);
-
-
             verifyEmail_close.setOnClickListener(closingDialog -> alertDialog.dismiss());
             verifyEmail.setOnClickListener(verifyEmailview -> {
                 if (helper.validateEmail(otpEmail)) {
                     String OtpEmail = otpEmail.getText().toString();
                     OtpPhoneNumber = Constants.DEFAULT_PHONE_NUMBER;
+
                     DatabaseReference refs = mDatabase.child(Constants.USERS);
                     refs.addValueEventListener(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot snapshot) {
                             //getting all ids of users
                             for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                                Log.i(TAG," Data snapshot key:"+ dataSnapshot.getKey());
                                 Users idDetails = dataSnapshot.getValue(Users.class);
                                 UserArrayList.add(idDetails);
                             }
@@ -112,6 +111,8 @@ public class Login_page extends AppCompatActivity {
                             for (Users user : UserArrayList) {
                                 String searchEmail = user.getEmail();
                                 if (searchEmail.equals(OtpEmail)) {
+                                    editor.putString(Constants.OTP_EMAIL, OtpEmail);
+                                    editor.apply();
                                     EmailFound = true;
                                     OtpPhoneNumber = user.getPhoneNo();
                                     Verification.setVisibility(View.VISIBLE);
@@ -215,9 +216,11 @@ public class Login_page extends AppCompatActivity {
         if (String.valueOf(enteredOTP).length() == 4) {
             if (generatedOTP.equals(enteredOTP)) {
                 Toast.makeText(getApplicationContext(), "Verified", Toast.LENGTH_SHORT).show();
-                Intent intent = new Intent(getApplicationContext(), reEnterPassword.class);
+
+                Intent intent = new Intent(getApplicationContext(), homepage.class);
                 startActivity(intent);
                 finish();
+
             } else {
                 Toast.makeText(getApplicationContext(), "Wrong OTP entered", Toast.LENGTH_SHORT).show();
                 mCountDownTimer.cancel();
@@ -226,7 +229,7 @@ public class Login_page extends AppCompatActivity {
         } else {
             Toast.makeText(getApplicationContext(), "Please enter OTP", Toast.LENGTH_SHORT).show();
             if (String.valueOf(enteredOTP).length() != 0)
-                pinViewOTP.getText().clear();
+                Objects.requireNonNull(pinViewOTP.getText()).clear();
         }
     }
 
