@@ -25,6 +25,7 @@ import android.widget.Toast;
 
 import com.Executioner.meetx.Homepage.homepage;
 import com.Executioner.meetx.R;
+import com.Executioner.meetx.authentication.changePassword.reEnterPassword;
 import com.chaos.view.PinView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -214,7 +215,7 @@ public class Login_page extends AppCompatActivity {
         if (String.valueOf(enteredOTP).length() == 4) {
             if (generatedOTP.equals(enteredOTP)) {
                 Toast.makeText(getApplicationContext(), "Verified", Toast.LENGTH_SHORT).show();
-                Intent intent = new Intent(getApplicationContext(), homepage.class);
+                Intent intent = new Intent(getApplicationContext(), reEnterPassword.class);
                 startActivity(intent);
                 finish();
             } else {
