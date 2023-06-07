@@ -27,6 +27,8 @@ import com.Executioner.meetx.Homepage.homepage;
 import com.Executioner.meetx.R;
 import com.Executioner.meetx.authentication.changePassword.reEnterPassword;
 import com.chaos.view.PinView;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -103,7 +105,7 @@ public class Login_page extends AppCompatActivity {
                         public void onDataChange(@NonNull DataSnapshot snapshot) {
                             //getting all ids of users
                             for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
-                                Log.i(TAG," Data snapshot key:"+ dataSnapshot.getKey());
+                                Log.i(TAG, " Data snapshot key:" + dataSnapshot.getKey());
                                 Users idDetails = dataSnapshot.getValue(Users.class);
                                 UserArrayList.add(idDetails);
                             }
@@ -217,9 +219,22 @@ public class Login_page extends AppCompatActivity {
             if (generatedOTP.equals(enteredOTP)) {
                 Toast.makeText(getApplicationContext(), "Verified", Toast.LENGTH_SHORT).show();
 
-                Intent intent = new Intent(getApplicationContext(), homepage.class);
-                startActivity(intent);
-                finish();
+//                Intent intent = new Intent(getApplicationContext(), homepage.class);
+//                startActivity(intent);
+//                finish();
+                auth.sendPasswordResetEmail(sharedPreferences.getString(Constants.OTP_EMAIL,Constants.NULL)).addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if (task.isSuccessful()) {
+                            Toast.makeText(Login_page.this, "Check your email", Toast.LENGTH_SHORT).show();
+                            Intent intent = new Intent(getApplicationContext(), Login_page.class);
+                            startActivity(intent);
+                            finish();
+                        }else{
+                            Toast.makeText(Login_page.this, "Error: "+task.getException().toString(), Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
 
             } else {
                 Toast.makeText(getApplicationContext(), "Wrong OTP entered", Toast.LENGTH_SHORT).show();
