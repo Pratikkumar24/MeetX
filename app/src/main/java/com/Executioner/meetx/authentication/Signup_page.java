@@ -29,11 +29,11 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Objects;
 
 public class Signup_page extends AppCompatActivity {
-
     EditText username, password, email, phoneNum;
     int retrieve;
     Button signUp;
@@ -50,7 +50,7 @@ public class Signup_page extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_signup_page);
-        getSupportActionBar().hide();
+        Objects.requireNonNull(getSupportActionBar()).hide();
 
 
         final boolean[] visibility = {false};
@@ -62,31 +62,41 @@ public class Signup_page extends AppCompatActivity {
                 String Email = email.getText().toString();
                 String PhoneNo = phoneNum.getText().toString();
                 Log.i(TAG, UserName + "$" + Password + "$" + Email + "&" + Password);
-                int k = 1000;
-                int duplicacyFlag = -2;
-                while (k > 0) {
-                    duplicacyFlag = VerifyDuplicacy(UserName, PhoneNo);
-                    if (retrieve == 1) {
-                        break;
+                DatabaseReference refs = mDatabase.child(Constants.USERS);
+                refs.addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        ArrayList<Users> UserArrayList = new ArrayList<>();
+                        for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                            Users idDetails = dataSnapshot.getValue(Users.class);
+                            UserArrayList.add(idDetails);
+                        }
+                        int duplicacyFlag = 0;
+                        for(Users user: UserArrayList)
+                        {
+                            String user_name = user.getUsername();
+                            String phone_num = user.getPhoneNo();
+                            if(user_name.equals(UserName))
+                            {
+                                Toast.makeText(Signup_page.this, "Username already exists", Toast.LENGTH_SHORT).show();
+                                duplicacyFlag = 1;
+                            }
+                            else if(phone_num.equals(PhoneNo))
+                            {
+                                Toast.makeText(Signup_page.this, "Phone number already exists", Toast.LENGTH_SHORT).show();
+                                duplicacyFlag = 2;
+
+                            }
+                            
+                        }
+                        checkFunctionality(duplicacyFlag, Email, Password,UserName, PhoneNo);
                     }
-                    k--;
-                }
-                Log.i(TAG, "k :" + k);
-                Log.i(TAG, "duplicay flag :" + duplicacyFlag);
-                switch (duplicacyFlag) {
-                    case 1:
-                        Toast.makeText(getApplicationContext(), "Username exist", Toast.LENGTH_SHORT).show();
-                        break;
-                    case 2:
-                        Toast.makeText(getApplicationContext(), "Phone number exist", Toast.LENGTH_SHORT).show();
-                        break;
-                    case 3:
-                        Toast.makeText(getApplicationContext(), "Both username and phone number exist", Toast.LENGTH_SHORT).show();
-                        break;
-                    default:
-                        CreateUserWithEmailAndPassword(Email, Password, UserName, PhoneNo);
-                        break;
-                }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                    }
+                });
             }
         });
         hide.setOnClickListener(view -> {
@@ -100,16 +110,12 @@ public class Signup_page extends AppCompatActivity {
             }
             visibility[0] = !visibility[0];
         });
-        alreadyMember.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(getApplicationContext(), Login_page.class);
-                startActivity(intent);
-                finish();
-            }
+        alreadyMember.setOnClickListener(view -> {
+            Intent intent = new Intent(getApplicationContext(), Login_page.class);
+            startActivity(intent);
+            finish();
         });
     }
-
     private void CreateUserWithEmailAndPassword(String email, String password, String userName, String phoneNo) {
         //putting into database
         auth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
@@ -140,7 +146,6 @@ public class Signup_page extends AppCompatActivity {
             }
         });
     }
-
     public void init() {
         auth = FirebaseAuth.getInstance();
         database = FirebaseDatabase.getInstance();
@@ -154,53 +159,21 @@ public class Signup_page extends AppCompatActivity {
         mDatabase = FirebaseDatabase.getInstance().getReference();
         retrieve = 0;
     }
-
     public boolean confirmInput() {
         return !(!helper.validateEmail(email) | !helper.validateUsername(username) |
                 !helper.validatePassword(password) | !helper.validatePhoneNumber(phoneNum));
     }
-
-    public Integer VerifyDuplicacy(String username, String PhoneNum) {
-        DatabaseReference refs = mDatabase.child(Constants.USERS);
-        UsernameFound = -1;
-        PhoneNumFound = -1;
-        Log.i(TAG, "Value one");
-        refs.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                ArrayList<Users> UserArrayList = new ArrayList<>();
-                //getting all ids of users
-                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
-                    Users idDetails = dataSnapshot.getValue(Users.class);
-                    UserArrayList.add(idDetails);
-                }
-                Log.i(TAG, "Reached inside verify duplicacy");
-                Log.i(TAG, "Value two");
-                for (Users user : UserArrayList) {
-                    String searchUsername = user.getUsername();
-                    String searchPhoneno = user.getPhoneNo();
-                    if (searchUsername.equals(username)) {
-                        UsernameFound = 0;
-                    }
-                    if (searchPhoneno.equals(PhoneNum)) {
-                        PhoneNumFound = 0;
-                    }
-                    if (UsernameFound == 0 && PhoneNumFound == 0) break;
-                }
-                retrieve = 1;
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
-        // 0 ->Both not found in DB, 1-> Username found in DB , 2-> Phone Num found in DB ,3 -> Both found in DB
-        Log.i(TAG, "Username value: " + UsernameFound + " Phone no value: " + PhoneNumFound);
-        Log.i(TAG, "Value three");
-        if (UsernameFound == -1 && PhoneNumFound == -1) return 0;
-        else if (UsernameFound == 0 && PhoneNumFound == -1) return 1;
-        else if (UsernameFound == -1 && PhoneNumFound == 0) return 2;
-        else return 3;
+    public void checkFunctionality(int duplicacyFlag, String Email, String Password, String UserName, String PhoneNo) {
+        switch (duplicacyFlag) {
+            case 1:
+                Toast.makeText(getApplicationContext(), "Username exist", Toast.LENGTH_SHORT).show();
+                break;
+            case 2:
+                Toast.makeText(getApplicationContext(), "Phone number exist", Toast.LENGTH_SHORT).show();
+                break;
+            default:
+                CreateUserWithEmailAndPassword(Email, Password, UserName, PhoneNo);
+                break;
+        }
     }
 }

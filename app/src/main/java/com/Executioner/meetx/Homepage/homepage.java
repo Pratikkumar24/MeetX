@@ -3,12 +3,14 @@ package com.Executioner.meetx.Homepage;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.Executioner.meetx.MainActivity;
 import com.Executioner.meetx.R;
 
 public class homepage extends AppCompatActivity {
@@ -27,6 +29,8 @@ String TAG = "myHomepage";
             @Override
             public void onClick(View view) {
 
+                Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                startActivity(intent);
                 Toast.makeText(getApplicationContext()," Logout button is working... ", Toast.LENGTH_SHORT).show();
             }
         });
