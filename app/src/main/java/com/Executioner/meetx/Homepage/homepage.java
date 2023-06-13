@@ -12,30 +12,41 @@ import android.widget.Toast;
 
 import com.Executioner.meetx.MainActivity;
 import com.Executioner.meetx.R;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.FirebaseDatabase;
+
+import java.util.Objects;
 
 public class homepage extends AppCompatActivity {
 ImageView logout;
+FirebaseAuth auth;
+    FirebaseDatabase database;
+
 String TAG = "myHomepage";
     @SuppressLint("MissingInflatedId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_homepage);
-        getSupportActionBar().hide();
-        Log.i(TAG,"[+] homepage");
+        Objects.requireNonNull(getSupportActionBar()).hide();
+        init();
         //todo - Button to logout
         logout = findViewById(R.id.logout);
-        logout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-                Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-                startActivity(intent);
-                Toast.makeText(getApplicationContext()," Logout button is working... ", Toast.LENGTH_SHORT).show();
-            }
+        logout.setOnClickListener(view -> {
+            auth.signOut();
+            Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+            startActivity(intent);
+            Toast.makeText(getApplicationContext(),"You have been successfully logged out!!", Toast.LENGTH_SHORT).show();
         });
+        //todo - logout
+
         //todo - button to sign out
 
         //todo - Integrating Log out and Sign out into SIDEBAR
+    }
+    public void init()
+    {
+        auth = FirebaseAuth.getInstance();
+        database = FirebaseDatabase.getInstance();
     }
 }

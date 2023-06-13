@@ -41,7 +41,6 @@ public class Signup_page extends AppCompatActivity {
     LinearLayout alreadyMember;
     FirebaseAuth auth;
     FirebaseDatabase database;
-    int UsernameFound, PhoneNumFound;
     private DatabaseReference mDatabase;
     String TAG = "signup_page";
 
@@ -51,8 +50,6 @@ public class Signup_page extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_signup_page);
         Objects.requireNonNull(getSupportActionBar()).hide();
-
-
         final boolean[] visibility = {false};
         init();
         signUp.setOnClickListener(view -> {
@@ -81,17 +78,13 @@ public class Signup_page extends AppCompatActivity {
                                 Toast.makeText(Signup_page.this, "Username already exists", Toast.LENGTH_SHORT).show();
                                 duplicacyFlag = 1;
                             }
-                            else if(phone_num.equals(PhoneNo))
-                            {
+                            else if(phone_num.equals(PhoneNo)) {
                                 Toast.makeText(Signup_page.this, "Phone number already exists", Toast.LENGTH_SHORT).show();
                                 duplicacyFlag = 2;
-
                             }
-                            
                         }
                         checkFunctionality(duplicacyFlag, Email, Password,UserName, PhoneNo);
                     }
-
                     @Override
                     public void onCancelled(@NonNull DatabaseError databaseError) {
 
@@ -118,31 +111,28 @@ public class Signup_page extends AppCompatActivity {
     }
     private void CreateUserWithEmailAndPassword(String email, String password, String userName, String phoneNo) {
         //putting into database
-        auth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-            @Override
-            public void onComplete(@NonNull Task<AuthResult> task) {
-                if (task.isSuccessful()) {
-                    String id = Objects.requireNonNull(task.getResult().getUser()).getUid();
-                    DatabaseReference reference = database.getReference().child(Constants.USERS).child(id);
-                    Users user = new Users();
-                    user.setUsername(userName);
-                    user.setPassword(password);
-                    user.setEmail(email);
-                    user.setPhoneNo(phoneNo);
-                    reference.setValue(user).addOnCompleteListener(completionTask -> {
-                        if (completionTask.isSuccessful()) {
-                            Intent intent = new Intent(getApplicationContext(), homepage.class);
-                            startActivity(intent);
-                            finish();
-                        } else {
-                            Log.i(TAG, "Error in creating account");
-                            Toast.makeText(getApplicationContext(), "Error in creating account", Toast.LENGTH_SHORT).show();
-                        }
-                    });
-                } else {
-                    Log.i(TAG, "Exception in creating user");
-                    Toast.makeText(getApplicationContext(), Objects.requireNonNull(task.getException()).getMessage(), Toast.LENGTH_SHORT).show();
-                }
+        auth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                String id = Objects.requireNonNull(task.getResult().getUser()).getUid();
+                DatabaseReference reference = database.getReference().child(Constants.USERS).child(id);
+                Users user = new Users();
+                user.setUsername(userName);
+                user.setPassword(password);
+                user.setEmail(email);
+                user.setPhoneNo(phoneNo);
+                reference.setValue(user).addOnCompleteListener(completionTask -> {
+                    if (completionTask.isSuccessful()) {
+                        Intent intent = new Intent(getApplicationContext(), homepage.class);
+                        startActivity(intent);
+                        finish();
+                    } else {
+                        Log.i(TAG, "Error in creating account");
+                        Toast.makeText(getApplicationContext(), "Error in creating account", Toast.LENGTH_SHORT).show();
+                    }
+                });
+            } else {
+                Log.i(TAG, "Exception in creating user");
+                Toast.makeText(getApplicationContext(), Objects.requireNonNull(task.getException()).getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
     }

@@ -26,8 +26,10 @@ import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
+import java.util.Objects;
+
 public class MainActivity extends AppCompatActivity {
-    String TAG="mainActivity";
+    String TAG="[+] mainActivity";
     Button login_btn;
     Button signup_btn;
     FirebaseAuth auth;
@@ -37,8 +39,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        auth = FirebaseAuth.getInstance();
-        getSupportActionBar().hide();
+        Objects.requireNonNull(getSupportActionBar()).hide();
 
         if(ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.SEND_SMS) == PackageManager.PERMISSION_GRANTED)
         {
@@ -48,10 +49,16 @@ public class MainActivity extends AppCompatActivity {
             requestStoragePermission();
         }
 
+        init();
 
         //todo - redirect to the homepage if a user is already logged in
+        if(auth.getCurrentUser() != null)
+        {
+            Intent intent = new Intent(getApplicationContext(), homepage.class);
+            startActivity(intent);
+            finish();
+        }
 
-        login_btn=findViewById(R.id.Login_page);
         login_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -60,7 +67,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        signup_btn = findViewById(R.id.Signup_page);
         signup_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -83,5 +89,12 @@ public class MainActivity extends AppCompatActivity {
             ActivityCompat.requestPermissions(this,
                     new String[] {Manifest.permission.SEND_SMS}, STORAGE_PERMISSION_CODE);
         }
+    }
+    private void init()
+    {
+        auth = FirebaseAuth.getInstance();
+        login_btn=findViewById(R.id.Login_page);
+        signup_btn = findViewById(R.id.Signup_page);
+
     }
 }
